@@ -1,12 +1,33 @@
+from kivy.app import App
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.label import Label
+from kivy.uix.scrollview import ScrollView
 import pandas as pd
-import matplotlib.pyplot as plt
 
-# Create a Series
-data = pd.Series([26, 10, 15, 49], index=['spring', 'summer', 'fall', "winter"])
+class DataFrameViewer(App):
+    def build(self):
+        # Create a sample DataFrame
+        data = {'col1': [1, 2, 3], 'col2': ['A', 'B', 'C']}
+        df = pd.DataFrame(data)
 
-# Plotting the pie chart
-data.plot.pie(autopct='%.1f%%', figsize=(7, 7), startangle=90, explode=(0.0, 0, 0, 0))
+        # Create a GridLayout
+        grid = GridLayout(cols=df.shape[1], size_hint_y=None)
+        grid.bind(minimum_height=grid.setter('height')) # Adjust height based on content
 
-plt.title('Fruit Distribution')
-plt.ylabel('') # Hides the default y-axis label
-plt.show()
+        # Add headers
+        for col in df.columns:
+            grid.add_widget(Label(text=str(col), bold=True))
+
+        # Add data rows
+        for index, row in df.iterrows():
+            for value in row:
+                grid.add_widget(Label(text=str(value)))
+
+        # Embed the GridLayout in a ScrollView
+        scroll_view = ScrollView(size_hint=(1, 1))
+        scroll_view.add_widget(grid)
+
+        return scroll_view
+
+if __name__ == '__main__':
+    DataFrameViewer().run()

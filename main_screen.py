@@ -7,6 +7,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.scrollview import ScrollView
 ########################
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -160,25 +161,53 @@ class Screen2(Screen):
 class Screen3(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        main_layout = BoxLayout(orientation="vertical", padding=0, spacing=10)
+        # main_layout = BoxLayout(orientation="vertical", padding=0, spacing=10)
 
-        s = pd.Series(data=[10, 5, 15, 20, 10],
-                      index=[1, 2, 3, 4, 5])
-        s.plot()
-        plt.show()
-        self.add_widget(main_layout)
+        # s = pd.Series(data=[10, 5, 15, 20, 10],
+        #               index=[1, 2, 3, 4, 5])
+        # s.plot()
+        # plt.show()
 
-class MyScreenManager(ScreenManager):
-    pass
+        data = {
+            'col1': [1, 2, 3],
+            'col2': ['A', 'B', 'C'],
+            'col3': ['James','Duy','algo']
+        }
+        df = pd.DataFrame(data)
 
-class MyApp(App):
-    def build(self):
-        print("2")
-        sm = MyScreenManager()
-        sm.add_widget(Screen1(name='screen1'))
-        sm.add_widget(Screen2(name='screen2'))
-        sm.add_widget(Screen3(name='screen3'))
-        return sm
+        # Create a GridLayout
+        grid = GridLayout(cols=df.shape[1], size_hint_y=None)
+        grid.bind(minimum_height=grid.setter('height'))  # Adjust height based on content
 
-if __name__ == '__main__':
-    MyApp().run()
+        # Add headers
+        for col in df.columns:
+            grid.add_widget(Label(text=str(col), bold=True))
+
+        # Add data rows
+        for index, row in df.iterrows():
+            for value in row:
+                grid.add_widget(Label(text=str(value)))
+
+        # Embed the GridLayout in a ScrollView
+        scroll_view = ScrollView(size_hint=(1, 1))
+        scroll_view.add_widget(grid)
+
+
+
+        class MyScreenManager(ScreenManager):
+            pass
+
+        class MyApp(App):
+            def build(self):
+                print("2")
+                sm = MyScreenManager()
+                sm.add_widget(Screen1(name='screen1'))
+                sm.add_widget(Screen2(name='screen2'))
+                sm.add_widget(Screen3(name='screen3'))
+                return sm
+
+        if __name__ == '__main__':
+            MyApp().run()
+
+
+        self.add_widget(scroll_view)
