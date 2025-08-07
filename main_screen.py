@@ -14,7 +14,10 @@ import matplotlib.pyplot as plt
 
 
 # create dictionary
-print("1")
+data_dict = {
+            'Day': ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+            'Revenue': [100, 150, 80, 200, 180]
+        }
 hotel_room = {
     "room1": {
         "size": "large",
@@ -55,10 +58,11 @@ class Screen1(Screen):
         main_layout.add_widget(label2)
         #
         # d. Buttons
-        button_row = BoxLayout(orientation="horizontal", size_hint_y=None, height=40, spacing=10)
-        button_row.add_widget(Button(text="Button A"))
-        button_row.add_widget(Button(text="Button B"))
-        main_layout.add_widget(button_row)
+        # button_row = BoxLayout(orientation="horizontal", size_hint_y=None, height=40, spacing=10)
+        # button_row.add_widget(Button(text="Button A"))
+        # button_row.add_widget(Button(text="Button B"))
+        # button_row.add_widget(Button(text="Button C"))
+        # main_layout.add_widget(button_row)
 
         # e. Label
         choices = Label(text="Options:")
@@ -68,25 +72,28 @@ class Screen1(Screen):
         button_grid = GridLayout(cols=2, spacing=10, size_hint_y=None, height=160)
 
         # i. Button 1: change to Hotel screen
-        b1 = Button(text="Button 1: Hotel")
-        b1.bind(on_press=self.change_screen2)
-        button_grid.add_widget(b1)
+        button_switch_hotel = Button(text="Button: Hotel")
+        button_switch_hotel.bind(on_press=self.change_screen_hotel)
+        button_grid.add_widget(button_switch_hotel)
+        button_switch_data = Button(text="Button: Data")
+        button_switch_data.bind(on_press=self.change_screen_data)
+        button_grid.add_widget(button_switch_data)
 
-        button_grid.add_widget(Button(text="Button 2"))
         button_grid.add_widget(Button(text="Button 3"))
         button_grid.add_widget(Button(text="Button 4"))
         main_layout.add_widget(button_grid)
 
-        bottom_button = BoxLayout(orientation="horizontal", size_hint_y=None, height=40, spacing=10)
-        bottom_button.add_widget(Button(text="button 1"))
-        bottom_button.add_widget(Button(text="button 2"))
-        bottom_button.add_widget(Button(text="button 3"))
-        main_layout.add_widget(bottom_button)
+        # bottom_button = BoxLayout(orientation="horizontal", size_hint_y=None, height=40, spacing=10)
+        # bottom_button.add_widget(Button(text="button 1"))
+        # bottom_button.add_widget(Button(text="button 2"))
+        # bottom_button.add_widget(Button(text="button 3"))
+        # main_layout.add_widget(bottom_button)
         self.add_widget(main_layout)
 
-    def change_screen2(self, *args):
-        self.manager.current = 'screen2'
-
+    def change_screen_hotel(self, *args):
+        self.manager.current = 'screen_hotel'
+    def change_screen_data(self, *args):
+        self.manager.current = 'screen_data'
 class Screen2(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -111,10 +118,12 @@ class Screen2(Screen):
 
 
         #create buttons
-        buttons_layout.add_widget(Button(text="button 1"))
-        b2 =(Button(text="button 2: to data screen"))
-        b2.bind(on_press=self.change_screen3)
-        buttons_layout.add_widget(b2)
+        button_switch_home = (Button(text="button 1: to home screen"))
+        button_switch_home.bind(on_press=self.change_screen_home)
+        buttons_layout.add_widget(button_switch_home)
+        button_switch_data =(Button(text="button 2: to data screen"))
+        button_switch_data.bind(on_press=self.change_screen_data)
+        buttons_layout.add_widget(button_switch_data)
         buttons_layout.add_widget(Button(text="button 3"))
 
         #create room imformation
@@ -126,34 +135,38 @@ class Screen2(Screen):
         # label1 = Label(text=hotel_room["room1"]["size"])
         # room1_layout.add_widget(label1)
         # hotel_layout.add_widget(room1_layout)
-        #
-        # # create room2 information
-        # room2_layout = BoxLayout(orientation="vertical", padding=0, spacing=10)
-        # room2_image = Image(source='room.webp')
-        # room2_layout.add_widget(room2_image)
-        # room2 = Label(text="This is room 2")
-        # room2_layout.add_widget(room2)
-        # label2 = Label(text=hotel_room["room2"]["size"])
-        # room2_layout.add_widget(label2)
-        # hotel_layout.add_widget(room2_layout)
         hotel_layout.add_widget(self.CreateRoomInfor('room2.jpeg', 'This is room 2', hotel_room["room2"]))
         hotel_layout.add_widget(self.CreateRoomInfor('room2.jpeg', 'This is room 3', hotel_room["room3"]))
         hotel_layout.add_widget(self.CreateRoomInfor('room.webp', 'This is room 1',hotel_room["room1"]))
+
+        button_book = Button(text = "book room")
+        button_book.bind(on_press=self.book_room)
+        hotel_layout.add_widget(button_book)
+
         self.add_widget(main_layout)
 
+    def book_room(self):
+        print('Booked')
     def CreateRoomInfor(self, source, text, room_data ):
         room_layout = BoxLayout(orientation="vertical", padding=0, spacing=10)
         room_image = Image(source=source)
         room_label = Label(text=text)
 
+        book_room_button = Button(text = "book room")
+
         room_layout.add_widget(room_image)
         room_layout.add_widget(room_label)
-        label1 = Label(text=room_data["size"])
-        room_layout.add_widget(label1)
+        room_layout.add_widget(book_room_button)
+
+
         return room_layout
 
-    def change_screen3(self, *args):
-        self.manager.current = 'screen3'
+
+    def change_screen_data(self, *args):
+        self.manager.current = 'screen_data'
+
+    def change_screen_home(self, *args):
+        self.manager.current = 'screen_home'
 
 
 
@@ -161,53 +174,49 @@ class Screen2(Screen):
 class Screen3(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        # main_layout = BoxLayout(orientation="vertical", padding=0, spacing=10)
 
-        # s = pd.Series(data=[10, 5, 15, 20, 10],
-        #               index=[1, 2, 3, 4, 5])
-        # s.plot()
-        # plt.show()
+        df = pd.DataFrame(data_dict)
 
-        data = {
-            'col1': [1, 2, 3],
-            'col2': ['A', 'B', 'C'],
-            'col3': ['James','Duy','algo']
-        }
-        df = pd.DataFrame(data)
+        plt.figure(figsize=(15, 10))
+        plt.plot(df['Day'], df['Revenue'], marker='*')
+        plt.title("Daily Revenue")
+        plt.xlabel("Day")
+        plt.ylabel("Amount ($)")
+        plt.grid(True)
+        plt.tight_layout()
 
-        # Create a GridLayout
-        grid = GridLayout(cols=df.shape[1], size_hint_y=None)
-        grid.bind(minimum_height=grid.setter('height'))  # Adjust height based on content
+        plot_path = 'plot.png'
+        plt.savefig(plot_path)
+        plt.close()
 
-        # Add headers
-        for col in df.columns:
-            grid.add_widget(Label(text=str(col), bold=True))
+        layout = BoxLayout(orientation='vertical')
+        image = Image(source=plot_path)
+        layout.add_widget(image)
 
-        # Add data rows
-        for index, row in df.iterrows():
-            for value in row:
-                grid.add_widget(Label(text=str(value)))
+        back_button = Button(text="Back to Home", size_hint_y=None, height=40)
+        back_button.bind(on_press=self.change_screen_home)
+        layout.add_widget(back_button)
 
-        # Embed the GridLayout in a ScrollView
-        scroll_view = ScrollView(size_hint=(1, 1))
-        scroll_view.add_widget(grid)
+        self.add_widget(layout)
+
+    def change_screen_home(self, *args):
+        self.manager.current = 'screen_home'
 
 
 
-        class MyScreenManager(ScreenManager):
-            pass
+class MyScreenManager(ScreenManager):
+    pass
 
-        class MyApp(App):
-            def build(self):
-                print("2")
-                sm = MyScreenManager()
-                sm.add_widget(Screen1(name='screen1'))
-                sm.add_widget(Screen2(name='screen2'))
-                sm.add_widget(Screen3(name='screen3'))
-                return sm
-
-        if __name__ == '__main__':
-            MyApp().run()
+class MyApp(App):
+    def build(self):
+        print("2")
+        sm = MyScreenManager()
+        sm.add_widget(Screen1(name='screen_home'))
+        sm.add_widget(Screen2(name='screen_hotel'))
+        sm.add_widget(Screen3(name='screen_data'))
+        return sm
 
 
-        self.add_widget(scroll_view)
+
+if __name__ == '__main__':
+    MyApp().run()
